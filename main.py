@@ -4,47 +4,41 @@ from absl import app
 from absl import flags
 from absl import logging
 
+from typing import List, Sequence, TypeVar, Iterable, Optional
+
+T = TypeVar('T')
+
 FLAGS = flags.FLAGS
 
 flags.DEFINE_integer('num_digits', 2, 'Length of the number.')
 flags.DEFINE_integer('multiplier', 6, 'Number to multiply by.')
 
-def digits():
+def digits() -> Iterable[int]:
     return range(0, 10)
 
-def letters(length):
+def letters(length: int) -> Iterable[str]:
     if length > 26:
         return []
     for l in range(ord('A'), ord('A') + length):
         yield chr(l)
 
-def rotate(input_list):
-    if not isinstance(input_list, list):
-        raise Exception('input_list is not a list: ' + str(input_list))
+def rotate(input_list: List[T]) -> List[T]:
     return input_list[-1:] + input_list[:-1]
 
-def concat_ints(input_list):
-    if not isinstance(input_list, list):
-        raise Exception('input_list is not a list: ' + str(input_list))
+def concat_ints(input_list: Iterable[int]) -> int:
     ret_int = 0
     for i in input_list:
         ret_int = ret_int * 10 + i
     return ret_int
 
-def verify(answer_list):
-    if not isinstance(answer_list, list):
-        raise Exception('answer_list is not a list: ' + str(answer_list))
-
+def verify(answer_list: List[int]) -> bool:
     answer = concat_ints(answer_list)
     result_list = rotate(answer_list)
     result = concat_ints(result_list)
 
     return (answer * FLAGS.multiplier) == result
 
-def print_answer(answer_list):
-    if not isinstance(answer_list, list):
-        raise Exception('answer_list is not a list: ' + str(answer_list))
-
+def print_answer(answer_list: List[int]) -> None:
     answer = concat_ints(answer_list)
     result_list = rotate(answer_list)
     result = concat_ints(result_list)
