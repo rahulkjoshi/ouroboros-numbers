@@ -1,32 +1,47 @@
 package ouroboros
 
 import (
-	"fmt"
+	"bytes"
+	"strconv"
 	"strings"
 )
 
-func toCharStr(i int) string {
-	return string('A' - 1 + i)
+func toBytes(digits []int, numDigits int) string {
+	ret := make([]byte, 0, numDigits)
+	for i := len(digits) - 1; i >= 0; i-- {
+		ret = strconv.AppendInt(ret, int64(digits[i]), 10)
+	}
+	ret = append(ret, bytes.Repeat([]byte{'_'}, numDigits-len(digits))...)
+	return string(ret)
 }
 
-func rotStrSlice(s []string, k int) []string {
-	if k < 0 || len(s) == 0 {
-		return s
+func Solve(numDigits, mult int) string {
+	var min string
+	for val := 0; val < 10; val++ {
+		digits := []int{val}
+		i := 1
+		r := 0
+		for ; i < numDigits; i++ {
+			t := (digits[i-1] * mult) + r
+			digits = append(digits, t%10)
+			r = t / 10
+		}
+		if digits[numDigits-1] != 0 && (digits[numDigits-1]*mult)+r == digits[0] {
+			solution := toBytes(digits, numDigits)
+			if min == "" || strings.Compare(min, solution) > 0 {
+				min = solution
+			}
+		}
 	}
-	r := len(s) - k%len(s)
-	return append(s[r:], s[:r]...)
+	return min
 }
 
-func PrintHeader(numDigits, mult int) {
-	var numAlpha []string
-	for i := 1; i <= numDigits; i++ {
-		numAlpha = append(numAlpha, toCharStr(i))
+func SolveToMax(max, mult int) (string, int) {
+	for i := 1; i <= max; i++ {
+		val := Solve(i, mult)
+		if val != "" {
+			return val, i
+		}
 	}
-	resultAlpha := rotStrSlice(numAlpha, 1)
-
-	fmt.Printf("Solving for:\n")
-	fmt.Printf("  %v\n", strings.Join(numAlpha, ""))
-	fmt.Printf("x %[1]*d\n", numDigits, mult)
-	fmt.Printf("%v\n", strings.Repeat("-", numDigits + 2))
-	fmt.Printf("  %v\n", strings.Join(resultAlpha, ""))
+	return "", 0
 }

@@ -3,22 +3,22 @@ package main
 import (
 	"flag"
 	"fmt"
-	"os"
 
 	"ouroboros"
 )
 
 var (
-	numDigits  = flag.Int("num_digits", 2, "Length of the number.")
+	max        = flag.Int("max", 2, "Max length of number.")
 	multiplier = flag.Int("multiplier", 6, "Number to multiply by.")
 )
 
 func main() {
 	flag.Parse()
-	if *numDigits > 26 {
-		fmt.Printf("--num_digits must be less than or equal to 26: %v\n", *numDigits)
-		os.Exit(1)
-	}
 
-	ouroboros.PrintHeader(*numDigits, *multiplier)
+	val, digits := ouroboros.SolveToMax(*max, *multiplier)
+	if val == "" {
+		fmt.Printf("Cannot be solved in %d digits.\n", *max)
+		return
+	}
+	fmt.Printf("Found value: %v (%d digits)\n", val, digits)
 }
