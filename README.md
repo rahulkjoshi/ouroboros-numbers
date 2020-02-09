@@ -1,6 +1,6 @@
 # Ouroboros Numbers
 Generates Ouroboros Number (AKA
-[Parasitic Number](https://en.wikipedia.org/wiki/Parasitic_number))
+[Parasitic Numbers](https://en.wikipedia.org/wiki/Parasitic_number))
 
 The Ouroboros is an ancient emblem of Egypt and Greece that's shown as a serpent
 or dragon with its tail in its mouth, continually devouring itself, and
