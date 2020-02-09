@@ -18,10 +18,10 @@ func toBytes(digits []int, numDigits int) string {
 func Solve(numDigits, mult int) string {
 	var min string
 	for val := 0; val < 10; val++ {
-		digits := []int{val}
-		i := 1
+		digits := make([]int, 1, numDigits)
+		digits[0] = val
 		r := 0
-		for ; i < numDigits; i++ {
+		for i := 1; i < numDigits; i++ {
 			t := (digits[i-1] * mult) + r
 			digits = append(digits, t%10)
 			r = t / 10
