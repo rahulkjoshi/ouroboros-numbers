@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func toBytes(digits []int, numDigits int) string {
+func toString(digits []int, numDigits int) string {
 	ret := make([]byte, 0, numDigits)
 	for i := len(digits) - 1; i >= 0; i-- {
 		ret = strconv.AppendInt(ret, int64(digits[i]), 10)
@@ -15,9 +15,9 @@ func toBytes(digits []int, numDigits int) string {
 	return string(ret)
 }
 
-func Solve(numDigits, mult int) string {
+func Solve(numDigits, mult int, allowLeadingZero bool) string {
 	var min string
-	for val := 0; val < 10; val++ {
+	for val := 1; val < 10; val++ {
 		digits := make([]int, 1, numDigits)
 		digits[0] = val
 		r := 0
@@ -26,19 +26,21 @@ func Solve(numDigits, mult int) string {
 			digits = append(digits, t%10)
 			r = t / 10
 		}
-		if digits[numDigits-1] != 0 && (digits[numDigits-1]*mult)+r == digits[0] {
-			solution := toBytes(digits, numDigits)
-			if min == "" || strings.Compare(min, solution) > 0 {
-				min = solution
+		if allowLeadingZero || digits[numDigits-1] != 0 {
+			if (digits[numDigits-1]*mult)+r == digits[0] {
+				solution := toString(digits, numDigits)
+				if min == "" || strings.Compare(min, solution) > 0 {
+					min = solution
+				}
 			}
 		}
 	}
 	return min
 }
 
-func SolveToMax(max, mult int) (string, int) {
+func SolveToMax(max, mult int, allowLeadingZero bool) (string, int) {
 	for i := 1; i <= max; i++ {
-		val := Solve(i, mult)
+		val := Solve(i, mult, allowLeadingZero)
 		if val != "" {
 			return val, i
 		}
